@@ -2,13 +2,15 @@ namespace SpriteKind {
     export const Geist = SpriteKind.create()
     export const coinzumsammel = SpriteKind.create()
 }
+let list: number[] = []
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Knecht.vy == 0) {
         Knecht.vy = -220
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
-    game.over(true, effects.splatter)
+    jetztiges_level += 1
+    Starte_Level()
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Geist, function (sprite, otherSprite) {
     info.changeScoreBy(1)
@@ -17,6 +19,160 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Geist, function (sprite, otherSp
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava1, function (sprite, location) {
     game.over(false, effects.dissolve)
 })
+function Starte_Level () {
+    Knecht = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . 5 5 5 5 5 5 5 . . . . . 
+        . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
+        . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
+        . 5 5 f f f 5 5 5 5 f f f 5 . . 
+        5 5 5 f f f 5 5 5 5 f f f 5 5 . 
+        5 5 5 f f f 5 5 5 5 f f f 5 5 . 
+        5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+        5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+        5 f f 5 5 5 5 5 5 5 5 5 f f 5 . 
+        5 f f f 5 5 5 5 5 5 5 f f f 5 . 
+        5 f f f f f f f f f f f f f 5 . 
+        . 5 f f f f f f f f f f f 5 . . 
+        . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
+        . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
+        . . . . 5 5 5 5 5 5 5 . . . . . 
+        `, SpriteKind.Player)
+    controller.moveSprite(Knecht, 100, 0)
+    if (jetztiges_level == 0) {
+        tiles.setTilemap(tilemap`Level1`)
+    } else {
+        tiles.setTilemap(tilemap`Level2`)
+    }
+    tiles.placeOnRandomTile(Knecht, assets.tile`myTile2`)
+    for (let Wert of tiles.getTilesByType(assets.tile`myTile2`)) {
+        tiles.setTileAt(Wert, assets.tile`transparency16`)
+    }
+    Knecht.ay = 350
+    scene.cameraFollowSprite(Knecht)
+    info.setLife(5)
+    for (let Wert of list) {
+    	
+    }
+    for (let Wert of tiles.getTilesByType(assets.tile`myTile1`)) {
+        Geist = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . 8 8 8 8 8 8 8 . . . . . 
+            . . . . 8 1 8 8 8 1 8 . . . . . 
+            . . . . 8 1 8 8 8 1 8 . . . . . 
+            . . . . 8 8 8 8 8 8 8 . . . . . 
+            . . . . 8 8 8 1 8 8 8 . . . . . 
+            . . . . 8 8 8 1 8 8 8 . . . . . 
+            . . . 8 8 8 8 8 8 8 8 8 . . . . 
+            . . 8 8 1 1 8 8 8 1 1 8 8 . . . 
+            . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
+            . 8 8 8 8 8 8 8 8 8 8 8 8 8 . . 
+            . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
+            . 8 8 8 8 8 1 1 1 8 8 8 8 8 . . 
+            . 8 8 8 8 8 8 1 8 8 8 8 8 8 . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Geist)
+        animation.runImageAnimation(
+        Geist,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 8 8 8 8 8 8 8 . . . 
+            . . . . . . 8 1 8 8 8 1 8 . . . 
+            . . . . . . 8 1 8 8 8 1 8 . . . 
+            . . . . . . 8 8 8 8 8 8 8 . . . 
+            . . . . . . 8 8 8 1 8 8 8 . . . 
+            . . . . . . 8 8 8 1 8 8 8 . . . 
+            . . . . . 8 8 8 8 8 8 8 8 8 . . 
+            . . . . 8 8 1 1 8 8 8 1 1 8 8 . 
+            . . . 8 8 8 8 1 1 1 1 1 8 8 8 8 
+            . . . 8 8 8 8 8 8 8 8 8 8 8 8 8 
+            . . . 8 8 8 8 1 1 1 1 1 8 8 8 8 
+            . . . 8 8 8 8 8 1 1 1 8 8 8 8 8 
+            . . . 8 8 8 8 8 8 1 8 8 8 8 8 8 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . 8 8 8 8 8 8 8 . . . . 
+            . . . . . 8 1 8 8 8 1 8 . . . . 
+            . . . . . 8 1 8 8 8 1 8 . . . . 
+            . . . . . 8 8 8 8 8 8 8 . . . . 
+            . . . . . 8 8 8 1 8 8 8 . . . . 
+            . . . . . 8 8 8 1 8 8 8 . . . . 
+            . . . . 8 8 8 8 8 8 8 8 8 . . . 
+            . . . 8 8 1 1 8 8 8 1 1 8 8 . . 
+            . . 8 8 8 8 1 1 1 1 1 8 8 8 8 . 
+            . . 8 8 8 8 8 8 8 8 8 8 8 8 8 . 
+            . . 8 8 8 8 1 1 1 1 1 8 8 8 8 . 
+            . . 8 8 8 8 8 1 1 1 8 8 8 8 8 . 
+            . . 8 8 8 8 8 8 1 8 8 8 8 8 8 . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . 8 8 8 8 8 8 8 . . . . . 
+            . . . . 8 1 8 8 8 1 8 . . . . . 
+            . . . . 8 1 8 8 8 1 8 . . . . . 
+            . . . . 8 8 8 8 8 8 8 . . . . . 
+            . . . . 8 8 8 1 8 8 8 . . . . . 
+            . . . . 8 8 8 1 8 8 8 . . . . . 
+            . . . 8 8 8 8 8 8 8 8 8 . . . . 
+            . . 8 8 1 1 8 8 8 1 1 8 8 . . . 
+            . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
+            . 8 8 8 8 8 8 8 8 8 8 8 8 8 . . 
+            . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
+            . 8 8 8 8 8 1 1 1 8 8 8 8 8 . . 
+            . 8 8 8 8 8 8 1 8 8 8 8 8 8 . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . 8 8 8 8 8 8 8 . . . . . . 
+            . . . 8 1 8 8 8 1 8 . . . . . . 
+            . . . 8 1 8 8 8 1 8 . . . . . . 
+            . . . 8 8 8 8 8 8 8 . . . . . . 
+            . . . 8 8 8 1 8 8 8 . . . . . . 
+            . . . 8 8 8 1 8 8 8 . . . . . . 
+            . . 8 8 8 8 8 8 8 8 8 . . . . . 
+            . 8 8 1 1 8 8 8 1 1 8 8 . . . . 
+            8 8 8 8 1 1 1 1 1 8 8 8 8 . . . 
+            8 8 8 8 8 8 8 8 8 8 8 8 8 . . . 
+            8 8 8 8 1 1 1 1 1 8 8 8 8 . . . 
+            8 8 8 8 8 1 1 1 8 8 8 8 8 . . . 
+            8 8 8 8 8 8 1 8 8 8 8 8 8 . . . 
+            `],
+        500,
+        true
+        )
+        tiles.placeOnTile(Geist, Wert)
+        tiles.setTileAt(Wert, assets.tile`transparency16`)
+    }
+    for (let Wert of tiles.getTilesByType(assets.tile`myTile0`)) {
+        coinzumsammel2 = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 5 5 5 5 . . . . . . 
+            . . . . . . 5 5 5 5 . . . . . . 
+            . . . . . . 5 5 5 5 . . . . . . 
+            . . . . . . 5 5 5 5 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.coinzumsammel)
+        tiles.placeOnTile(coinzumsammel2, Wert)
+        tiles.setTileAt(Wert, assets.tile`transparency16`)
+    }
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.coinzumsammel, function (sprite, otherSprite) {
     otherSprite.destroy()
     Geist_2_rot = sprites.create(img`
@@ -289,6 +445,7 @@ let Geist_2_rot: Sprite = null
 let coinzumsammel2: Sprite = null
 let Geist: Sprite = null
 let Knecht: Sprite = null
+let jetztiges_level = 0
 scene.setBackgroundImage(img`
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888555555555555555555555555555555555555
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888555555555555555555555555555555555555
@@ -411,147 +568,8 @@ scene.setBackgroundImage(img`
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
     `)
-Knecht = sprites.create(img`
-    . . . . . . . . . . . . . . . . 
-    . . . . 5 5 5 5 5 5 5 . . . . . 
-    . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
-    . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
-    . 5 5 f f f 5 5 5 5 f f f 5 . . 
-    5 5 5 f f f 5 5 5 5 f f f 5 5 . 
-    5 5 5 f f f 5 5 5 5 f f f 5 5 . 
-    5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
-    5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
-    5 f f 5 5 5 5 5 5 5 5 5 f f 5 . 
-    5 f f f 5 5 5 5 5 5 5 f f f 5 . 
-    5 f f f f f f f f f f f f f 5 . 
-    . 5 f f f f f f f f f f f 5 . . 
-    . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
-    . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
-    . . . . 5 5 5 5 5 5 5 . . . . . 
-    `, SpriteKind.Player)
-info.setLife(5)
-controller.moveSprite(Knecht, 100, 0)
-tiles.setTilemap(tilemap`Level1`)
-Knecht.ay = 350
-scene.cameraFollowSprite(Knecht)
-for (let Wert of tiles.getTilesByType(assets.tile`myTile1`)) {
-    Geist = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . 8 8 8 8 8 8 8 . . . . . 
-        . . . . 8 1 8 8 8 1 8 . . . . . 
-        . . . . 8 1 8 8 8 1 8 . . . . . 
-        . . . . 8 8 8 8 8 8 8 . . . . . 
-        . . . . 8 8 8 1 8 8 8 . . . . . 
-        . . . . 8 8 8 1 8 8 8 . . . . . 
-        . . . 8 8 8 8 8 8 8 8 8 . . . . 
-        . . 8 8 1 1 8 8 8 1 1 8 8 . . . 
-        . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
-        . 8 8 8 8 8 8 8 8 8 8 8 8 8 . . 
-        . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
-        . 8 8 8 8 8 1 1 1 8 8 8 8 8 . . 
-        . 8 8 8 8 8 8 1 8 8 8 8 8 8 . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Geist)
-    animation.runImageAnimation(
-    Geist,
-    [img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . 8 8 8 8 8 8 8 . . . 
-        . . . . . . 8 1 8 8 8 1 8 . . . 
-        . . . . . . 8 1 8 8 8 1 8 . . . 
-        . . . . . . 8 8 8 8 8 8 8 . . . 
-        . . . . . . 8 8 8 1 8 8 8 . . . 
-        . . . . . . 8 8 8 1 8 8 8 . . . 
-        . . . . . 8 8 8 8 8 8 8 8 8 . . 
-        . . . . 8 8 1 1 8 8 8 1 1 8 8 . 
-        . . . 8 8 8 8 1 1 1 1 1 8 8 8 8 
-        . . . 8 8 8 8 8 8 8 8 8 8 8 8 8 
-        . . . 8 8 8 8 1 1 1 1 1 8 8 8 8 
-        . . . 8 8 8 8 8 1 1 1 8 8 8 8 8 
-        . . . 8 8 8 8 8 8 1 8 8 8 8 8 8 
-        `,img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . 8 8 8 8 8 8 8 . . . . 
-        . . . . . 8 1 8 8 8 1 8 . . . . 
-        . . . . . 8 1 8 8 8 1 8 . . . . 
-        . . . . . 8 8 8 8 8 8 8 . . . . 
-        . . . . . 8 8 8 1 8 8 8 . . . . 
-        . . . . . 8 8 8 1 8 8 8 . . . . 
-        . . . . 8 8 8 8 8 8 8 8 8 . . . 
-        . . . 8 8 1 1 8 8 8 1 1 8 8 . . 
-        . . 8 8 8 8 1 1 1 1 1 8 8 8 8 . 
-        . . 8 8 8 8 8 8 8 8 8 8 8 8 8 . 
-        . . 8 8 8 8 1 1 1 1 1 8 8 8 8 . 
-        . . 8 8 8 8 8 1 1 1 8 8 8 8 8 . 
-        . . 8 8 8 8 8 8 1 8 8 8 8 8 8 . 
-        `,img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . 8 8 8 8 8 8 8 . . . . . 
-        . . . . 8 1 8 8 8 1 8 . . . . . 
-        . . . . 8 1 8 8 8 1 8 . . . . . 
-        . . . . 8 8 8 8 8 8 8 . . . . . 
-        . . . . 8 8 8 1 8 8 8 . . . . . 
-        . . . . 8 8 8 1 8 8 8 . . . . . 
-        . . . 8 8 8 8 8 8 8 8 8 . . . . 
-        . . 8 8 1 1 8 8 8 1 1 8 8 . . . 
-        . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
-        . 8 8 8 8 8 8 8 8 8 8 8 8 8 . . 
-        . 8 8 8 8 1 1 1 1 1 8 8 8 8 . . 
-        . 8 8 8 8 8 1 1 1 8 8 8 8 8 . . 
-        . 8 8 8 8 8 8 1 8 8 8 8 8 8 . . 
-        `,img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . 8 8 8 8 8 8 8 . . . . . . 
-        . . . 8 1 8 8 8 1 8 . . . . . . 
-        . . . 8 1 8 8 8 1 8 . . . . . . 
-        . . . 8 8 8 8 8 8 8 . . . . . . 
-        . . . 8 8 8 1 8 8 8 . . . . . . 
-        . . . 8 8 8 1 8 8 8 . . . . . . 
-        . . 8 8 8 8 8 8 8 8 8 . . . . . 
-        . 8 8 1 1 8 8 8 1 1 8 8 . . . . 
-        8 8 8 8 1 1 1 1 1 8 8 8 8 . . . 
-        8 8 8 8 8 8 8 8 8 8 8 8 8 . . . 
-        8 8 8 8 1 1 1 1 1 8 8 8 8 . . . 
-        8 8 8 8 8 1 1 1 8 8 8 8 8 . . . 
-        8 8 8 8 8 8 1 8 8 8 8 8 8 . . . 
-        `],
-    500,
-    true
-    )
-    tiles.placeOnTile(Geist, Wert)
-    tiles.setTileAt(Wert, assets.tile`transparency16`)
-}
-for (let Wert of tiles.getTilesByType(assets.tile`myTile0`)) {
-    coinzumsammel2 = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . 5 5 5 5 . . . . . . 
-        . . . . . . 5 5 5 5 . . . . . . 
-        . . . . . . 5 5 5 5 . . . . . . 
-        . . . . . . 5 5 5 5 . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.coinzumsammel)
-    tiles.placeOnTile(coinzumsammel2, Wert)
-    tiles.setTileAt(Wert, assets.tile`transparency16`)
-}
+jetztiges_level = 0
+Starte_Level()
 game.onUpdate(function () {
     Knecht.setImage(img`
         . . . . . 5 5 5 5 5 5 5 . . . . 
