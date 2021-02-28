@@ -2,12 +2,6 @@ namespace SpriteKind {
     export const Geist = SpriteKind.create()
     export const coinzumsammel = SpriteKind.create()
 }
-let list: number[] = []
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (Knecht.vy == 0) {
-        Knecht.vy = -220
-    }
-})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     jetztiges_level += 1
     Starte_Level()
@@ -19,40 +13,36 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Geist, function (sprite, otherSp
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava1, function (sprite, location) {
     game.over(false, effects.dissolve)
 })
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (Knecht.vy == 0) {
+        Knecht.vy = -220
+    }
+})
 function Starte_Level () {
-    Knecht = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . 5 5 5 5 5 5 5 . . . . . 
-        . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
-        . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
-        . 5 5 f f f 5 5 5 5 f f f 5 . . 
-        5 5 5 f f f 5 5 5 5 f f f 5 5 . 
-        5 5 5 f f f 5 5 5 5 f f f 5 5 . 
-        5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
-        5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
-        5 f f 5 5 5 5 5 5 5 5 5 f f 5 . 
-        5 f f f 5 5 5 5 5 5 5 f f f 5 . 
-        5 f f f f f f f f f f f f f 5 . 
-        . 5 f f f f f f f f f f f 5 . . 
-        . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
-        . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
-        . . . . 5 5 5 5 5 5 5 . . . . . 
-        `, SpriteKind.Player)
     controller.moveSprite(Knecht, 100, 0)
     if (jetztiges_level == 0) {
         tiles.setTilemap(tilemap`Level1`)
-    } else {
+    } else if (jetztiges_level == 1) {
         tiles.setTilemap(tilemap`Level2`)
+    } else if (jetztiges_level == 2) {
+        tiles.setTilemap(tilemap`Level6`)
+    } else {
+        game.over(true)
     }
     tiles.placeOnRandomTile(Knecht, assets.tile`myTile2`)
     for (let Wert of tiles.getTilesByType(assets.tile`myTile2`)) {
         tiles.setTileAt(Wert, assets.tile`transparency16`)
     }
-    Knecht.ay = 350
     scene.cameraFollowSprite(Knecht)
     info.setLife(5)
-    for (let Wert of list) {
-    	
+    for (let Wert of sprites.allOfKind(SpriteKind.Enemy)) {
+        Wert.destroy()
+    }
+    for (let Wert of sprites.allOfKind(SpriteKind.Enemy)) {
+        Wert.destroy()
+    }
+    for (let Wert of sprites.allOfKind(SpriteKind.Enemy)) {
+        Wert.destroy()
     }
     for (let Wert of tiles.getTilesByType(assets.tile`myTile1`)) {
         Geist = sprites.create(img`
@@ -444,8 +434,26 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 let Geist_2_rot: Sprite = null
 let coinzumsammel2: Sprite = null
 let Geist: Sprite = null
-let Knecht: Sprite = null
 let jetztiges_level = 0
+let Knecht: Sprite = null
+Knecht = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . 5 5 5 5 5 5 5 . . . . . 
+    . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
+    . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
+    . 5 5 f f f 5 5 5 5 f f f 5 . . 
+    5 5 5 f f f 5 5 5 5 f f f 5 5 . 
+    5 5 5 f f f 5 5 5 5 f f f 5 5 . 
+    5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+    5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+    5 f f 5 5 5 5 5 5 5 5 5 f f 5 . 
+    5 f f f 5 5 5 5 5 5 5 f f f 5 . 
+    5 f f f f f f f f f f f f f 5 . 
+    . 5 f f f f f f f f f f f 5 . . 
+    . 5 5 5 5 5 5 5 5 5 5 5 5 5 . . 
+    . . 5 5 5 5 5 5 5 5 5 5 5 . . . 
+    . . . . 5 5 5 5 5 5 5 . . . . . 
+    `, SpriteKind.Player)
 scene.setBackgroundImage(img`
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888555555555555555555555555555555555555
     8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888555555555555555555555555555555555555
@@ -637,6 +645,12 @@ game.onUpdate(function () {
             `)
     } else {
     	
+    }
+    if (Knecht.isHittingTile(CollisionDirection.Left) || Knecht.isHittingTile(CollisionDirection.Right)) {
+        Knecht.vy = 0
+        Knecht.ay = 0
+    } else {
+        Knecht.ay = 350
     }
     if (Knecht.vx < 0) {
         Knecht.image.flipX()
